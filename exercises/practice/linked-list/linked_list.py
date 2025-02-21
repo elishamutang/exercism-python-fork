@@ -1,24 +1,12 @@
-class EmptyListException(Exception):
-    def __init__(self, message):
-        self.message = message
-
 class Node:
     def __init__(self, value, succeeding=None, previous=None):
         self.value = value
         self.next = succeeding
         self.prev = previous
 
-
 class LinkedList:
     def __init__(self):
         self.head = None
-
-    def __iter__(self):
-        return self
-
-    def __next__(self):
-        if len(self) == 1:
-            return self.head.value
 
     def __len__(self):
         length = 0
