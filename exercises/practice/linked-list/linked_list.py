@@ -17,7 +17,8 @@ class LinkedList:
         return self
 
     def __next__(self):
-        pass
+        if len(self) == 1:
+            return self.head.value
 
     def __len__(self):
         length = 0
@@ -35,7 +36,7 @@ class LinkedList:
         else:
             current_node = self.head
 
-            while current_node is not None:
+            while current_node.next is not None:
                 current_node.next.prev = current_node
                 current_node = current_node.next
 
@@ -46,17 +47,56 @@ class LinkedList:
         if len(self) == 0:
             raise IndexError('List is empty.')
 
+        if len(self) == 1:
+            current_node = self.head
+            self.head = None
+            return current_node.value
+
+        current_node = self.head
+        previous_node = current_node.prev
+
+        while current_node.next is not None:
+            previous_node = current_node
+            current_node = current_node.next
+
+        previous_node.next = None
+
+        return current_node.value
 
     # Removes element from the beginning of list.
     def shift(self):
         if len(self) == 0:
-            raise IndexError('Value not found')
+            raise IndexError('List is empty')
+
+        old_head = self.head
+        new_head = old_head.next
+
+        self.head = new_head
+
+        return old_head.value
 
     # Adds element at start of list.
-    def unshift(self, values):
-        pass
+    def unshift(self, value):
+        new_head = Node(value, succeeding=self.head)
+        self.head = new_head
 
     # If value appears more than once, only the first occurrence should be removed.
     def delete(self, value):
         if len(self) == 0:
             raise ValueError('Value not found')
+
+        current_node = self.head
+
+        while current_node.value != value and current_node.next is not None:
+            current_node = current_node.next
+
+        if current_node.value != value:
+            raise ValueError('Value not found')
+
+        prev_node = current_node.prev
+        next_node = current_node.next
+
+        if prev_node is None:
+            self.head = next_node
+        else:
+            prev_node.next = next_node
